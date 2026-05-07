@@ -151,8 +151,26 @@ CALL newPost(5,"yoooooooo",@result_new_post);
 SELECT @result_new_post;
 
 -- YC 5
+DELIMITER //
+
+CREATE PROCEDURE friend_list_show(IN user_id_friend_in INT, IN limit_in INT, IN offset_in INT)
+BEGIN
+    SELECT 
+        us.username,
+        us.email
+    FROM Friends fri
+    JOIN Users us ON us.user_id = fri.friend_id
+    WHERE fri.user_id = user_id_friend_in and fri.status = "accepted"
+    LIMIT limit_in OFFSET offset_in;
+END //
+
+DELIMITER ;
+
+CALL friend_list_show(3,3,0);
+
+-- YC 5.1
 CREATE INDEX idx_post_created_at ON Posts(post_id);
 
--- YC 6
+-- YC 5.2
 DELETE FROM Users LIMIT 1;
 SELECT * FROM Users;
